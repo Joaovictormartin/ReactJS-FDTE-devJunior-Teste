@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+import logoImg from '../../assets/img/pokemonLogo.png';
+
 export const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -25,7 +27,7 @@ export const Logo = styled.div`
   width: 270px;
   height: 99px;
 
-  background-image: url(${({src}) => src});
+  background-image: url(${logoImg});
   background-size: cover;
   background-position: center;
 
@@ -47,9 +49,15 @@ export const ButtonStart = styled(Link)`
   font-size: 18px;
   line-height: 24px;
   font-weight: 700;
-  color: var(--white);
+  color: var(--neutral);
   text-decoration: none;
   text-align: center;
   text-transform: uppercase;
+
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.95)
+  }
 
 `;
