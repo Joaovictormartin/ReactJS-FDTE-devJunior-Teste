@@ -1,5 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
+
+import { TextInputEditModal } from '../TextInputEditModal';
+
+import { types } from "../../utils/Translation";
 
 import { ConteinerInfoPokemon } from "../ConteinerInfoPokemon";
 
@@ -15,54 +19,39 @@ import {
   WrapperInfo,
   Separator,
   PokebolaIcon,
+  ButtonRemovePokemon,
   WrapperTypes,
-  Types
+  Types,
 } from "./styles";
 
 export function ModalPokemon({
-  isOpen,
-  onRequestClose,
   data,
-  pokebolas,
+  isOpen,
   setPokebolas,
+  onRequestClose,
+  arryPokemon = [],
+  isEdit = false,
 }) {
+  const [input, setInput] = useState("");
 
-  const handlePokemonCapture = useCallback((data) => {
+  function handleAddPokemon(data) {
     setPokebolas((oldStatus) => [...oldStatus, data]);
     onRequestClose();
-  }, []);
+    setInput("");
+  }
 
-  function types(item) {
-    const tipos = {
-      water: "água",
-      normal: "normal",
-      fighting: "luta",
-      flying: "voo",
-      poison: "veneno",
-      ground: "terra",
-      rock: "rocha",
-      bug: "bicho",
-      ghost: "fantasma",
-      steel: "aço",
-      fire: "fogo",
-      grass: "grama",
-      electric: "elétrico",
-      psychic: "psíquico",
-      ice: "gelo",
-      dragon: "dragão",
-      dark: "sombrio",
-      fairy: "mágico",
-      unknown: "desconhecido",
-      shadow: "sombrio",
-    };
-
-    return tipos[item];
+  function handleRemovePokemon(id) {
+    const filterPokemon = arryPokemon.filter((item) => item.id !== id);
+    setPokebolas(filterPokemon);
+    onRequestClose();
+    setInput("");
   }
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
+      ariaHideApp={false}
       style={{
         content: pokemonModalContent,
         overlay: pokemonModalOverlay,
@@ -74,27 +63,48 @@ export function ModalPokemon({
         </WraperTop>
 
         <WraperBottom>
-          <ImagemAvatar src={null} />
-          <Name>
-            <h1>DevFast</h1> {/*<h1>{data?.name}</h1>*/}
-          </Name>
+          <ImagemAvatar src={data?.sprites?.front_default} />
+          {isEdit ? (
+            <TextInputEditModal value={input} onChange={setInput} isVisible/>
+          ) : (
+            <Name>
+              <h1>{data?.name}</h1>
+            </Name>
+          )}
 
           <WrapperInfo>
-            <ConteinerInfoPokemon title="hp" content="45/45" />
+            <ConteinerInfoPokemon
+              title="hp"
+              content={`${data?.stats[0]?.base_stat}/${data?.stats[0]?.base_stat}`}
+            />
             <Separator width="1" height="48" />
-            <ConteinerInfoPokemon title="altura" content="0.7 m" />
+            <ConteinerInfoPokemon
+              title="altura"
+              content={`${data?.height * 10} m`}
+            />
             <Separator width="1" height="48" />
-            <ConteinerInfoPokemon title="peso" content="6.9 kg" />
+            <ConteinerInfoPokemon
+              title="peso"
+              content={`${data?.weight / 10} kg`}
+            />
           </WrapperInfo>
 
           <Separator width="311" height="1" isMargin />
 
-          <PokebolaIcon onClick={() => handlePokemonCapture(data)} />
+          {isEdit ? (
+            <ButtonRemovePokemon onClick={() => handleRemovePokemon(data.id)}>
+              Liberar pokemon
+            </ButtonRemovePokemon>
+          ) : (
+            <PokebolaIcon onClick={() => handleAddPokemon(data)} />
+          )}
+
           <WrapperTypes>
-            {data?.types
-              .map((item) => (
-                <Types back={item?.slot}>{types(item?.type?.name)}</Types>
-              ))}
+            {data?.types.map((item) => (
+              <Types key={item?.slot} back={item?.slot}>
+                {types(item?.type?.name)}
+              </Types>
+            ))}
           </WrapperTypes>
         </WraperBottom>
       </Container>

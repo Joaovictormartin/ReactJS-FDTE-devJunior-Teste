@@ -39,6 +39,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 export const ButtonCloseModal = styled.button`
@@ -88,9 +89,10 @@ export const WraperBottom = styled.div`
   height: 406px;
 
   display: flex;
+  flex: 1;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-start;
 
   position: absolute;
   top: 153px;
@@ -118,10 +120,15 @@ export const ImagemAvatar = styled.div`
 `;
 
 export const Name = styled.div`
-  position: absolute;
-  height: 24px;
-  top: calc(50% - 30px);
-  margin-bottom: 35px;
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  margin: 160px 0 36px 0;
 
   h1 {
     font-size: 18px;
@@ -136,6 +143,7 @@ export const Name = styled.div`
   }
 `;
 
+
 export const WrapperInfo = styled.div`
   width: 311px;
 
@@ -147,7 +155,7 @@ export const WrapperInfo = styled.div`
 export const Separator = styled.span`
   width: ${({ width }) => width && width}px;
   height: ${({ height }) => height && height}px;
-  margin: ${({ isMargin }) => isMargin && "42px 0"};
+  margin: ${({ isMargin }) => isMargin && "40px 0"};
 
   background: var(--neutral-500);
 `;
@@ -155,7 +163,6 @@ export const Separator = styled.span`
 export const PokebolaIcon = styled.button`
   width: 80px;
   height: 80px;
-
   position: absolute;
   bottom: 40px;
   border-radius: 50%;
@@ -165,11 +172,41 @@ export const PokebolaIcon = styled.button`
   background-size: cover;
   background-position: center;
   background-image: url(${pokeballImg});
+
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.8);
+  }
+`;
+
+export const ButtonRemovePokemon = styled.button`
+  width: 221px;
+  height: 56px;
+  position: absolute;
+  bottom: 52px;
+
+  border-radius: 42px;
+  border: 0;
+  background: var(--action-Default);
+
+  font-weight: 700;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--neutral);
+
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.8);
+  }
 `;
 
 export const WrapperTypes = styled.div`
   display: flex;
-  /* flex-direction: row; */
   align-items: center;
   justify-content: center;
 
@@ -192,9 +229,8 @@ export const Types = styled.div`
   justify-content: center;
   align-items: center;
 
-  background: ${({ back }) => back === 1 
-    ? "var(--types-Grass)" 
-    : "var(--types-Poison)"};
+  background: ${({ back }) =>
+    back === 1 ? "var(--types-Grass)" : "var(--types-Poison)"};
 
   color: #ffffff;
 
