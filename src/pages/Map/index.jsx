@@ -1,95 +1,76 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import WOW from "wowjs";
+import React, { useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { SideBar } from '../../components/Sidebar';
-import { ModalPokemon } from '../../components/ModalPokemon';
+import PokemonRedux from "../../redux/ducks/pokemon";
+import { SideBar } from "../../components/Sidebar";
+import { ModalPokemon } from "../../components/ModalPokemon";
 
-import { Container, Character } from './styles';
+import { Container, Character } from "./styles";
 
 export default function Map() {
-  const [ error ] = useState(false);
-  const [ moving, setMoving ] = useState(false);
-  const [ mouseOver, setMouseOver ] = useState(false);
-  const [ wowClass, setWowClass ] = useState("");
-  const [ openModal, setOpenModal ] = useState(false);
-  const [ pokebolas, setPokebolas ] = useState([]);
+  const dispatch = useDispatch();
 
-  useEffect(() =>{
-    const wow = new WOW.WOW({
-      boxClass: "wow",
-      animateClass: "animated",
-      offset: 0,
-      live: true,
-      mobile: true,
-      scrollContainer: null,
-    });
-    wow.init();
-  },[]);
+  const [error] = useState(false);
+  const [moving, setMoving] = useState(false);
+  const [mouseOver, setMouseOver] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [pokebolas, setPokebolas] = useState([]);
 
-  const handleMouseOverTrue = useCallback(() =>{
-    setWowClass(" wow fadeInUp animated");
+  const { data: pokemonData } = useSelector(({ pokemon }) => pokemon);
+
+  const handleMouseOverTrue = useCallback(() => {
     setMouseOver(true);
-  },[]);
-  
-  const handleMouseOverFalse = useCallback(() =>{
-    setWowClass(" wow fadeOutDown animated");
+  }, []);
 
-    setTimeout(() =>{
-      setMouseOver(false);
-    },300)
-  },[]);
-  
-  const handleCloseModal = useCallback(() =>{
+  const handleMouseOverFalse = useCallback(() => {
+    setMouseOver(false);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
     setOpenModal(false);
     setMoving(false);
     setMouseOver(false);
-  },[]);
-  
-  const handleSubmit = useCallback(async () =>{
+  }, []);
+
+  async function handleSubmit() {
     try {
       setMoving(!moving);
 
-      const qtdMax = 807
+      const qtdMax = 807;
       const key = Math.floor(Math.random() * (qtdMax - 1 + 1)) + 1;
 
-      //await dispatch(PokemonActions.captureRequest(key));
-    
-      setTimeout(() =>{
+      await dispatch(PokemonRedux.captureRequest(key));
+
+      setTimeout(() => {
         setOpenModal(true);
         setMoving(false);
         setMouseOver(false);
-      },2000)
-
-    } catch(e) {}
-  },[]);
-
-  const pokemon = [
-    {id: 1, name: 'teste'},
-    {id: 2, name: 'teste'},
-    {id: 3, name: 'teste'},
-  ]
+      }, 2000);
+    } catch (e) {}
+  }
 
   return (
     <Container>
-      <SideBar data={pokebolas}/>
+      <SideBar data={pokebolas} setPokebolas={setPokebolas} />
+      
       <Character
         onMouseOver={handleMouseOverTrue}
         onMouseLeave={handleMouseOverFalse}
         onClick={handleSubmit}
         moving={moving}
       >
-        {mouseOver && !error && <div className={"search" + wowClass} />}
-        {mouseOver && error && <div className={"error" + wowClass} />}
+        {mouseOver && !error && <div className={"search"} />}
+        {mouseOver && error && <div className={"error"} />}
+        {mouseOver && pokebolas.length === 6 && <div className={"error"} />}
         {moving && <div className={"searching"} />}
       </Character>
 
       <ModalPokemon
         isOpen={openModal}
         onRequestClose={handleCloseModal}
-        pokebolas={pokebolas}
         setPokebolas={setPokebolas}
+        data={pokemonData}
       />
-
     </Container>
   );
 }

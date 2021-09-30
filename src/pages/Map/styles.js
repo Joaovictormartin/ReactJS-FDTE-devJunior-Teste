@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import pageBackgroundImg from "../../assets/img/pageBackground.png";
 import searchTooltipImg from "../../assets/img/searchTooltip.png";
@@ -6,6 +6,18 @@ import searchingTooltipImg from "../../assets/img/searchingTooltip.png";
 import tooltipErrorImg from "../../assets/img/tooltipError.png";
 import ashFrontImg from "../../assets/img/ashFront.png";
 import ashMovingGif from "../../assets/img/ashStop.png.gif";
+
+const fadeIn = keyframes`
+  0% { 
+    transform: translateY(-25px);
+    opacity: 0;
+  }
+  50% { opacity: 0.5}
+  100% { 
+    transform: translateY(-65px);
+    opacity: 1;
+  }
+`;
 
 export const Container = styled.div`
   width: 100%;
@@ -25,7 +37,8 @@ export const Container = styled.div`
     height: 59.71px;
     position: absolute;
     top: -65px;
-
+    //animation: ${fadeIn} 600ms linear;
+    
     background-image: url(${searchTooltipImg});
     background-size: cover;
     background-position: center;
