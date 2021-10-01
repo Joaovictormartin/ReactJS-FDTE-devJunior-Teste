@@ -11,7 +11,6 @@ export const pokemonModalOverlay = {
   alignItems: "center",
   justifyContent: "center",
 
-  overflow: "hidden",
   zIndex: 5,
 };
 
@@ -22,10 +21,10 @@ export const pokemonModalContent = {
   justifyContent: "center",
 
   position: "relative",
-  padding: 20,
+  padding: "0 !important",
   top: 0,
+  width: 370,
   height: 560,
-  width: 360,
   left: 0,
 
   border: "none",
@@ -40,6 +39,12 @@ export const Container = styled.div`
   flex-direction: row;
   align-items: center;
   box-sizing: border-box;
+
+  background: linear-gradient(
+    90deg,
+    var(--primary-Gradient-500) 0%,
+    var(--primary-Gradient-300) 100%
+  );
 `;
 
 export const ButtonCloseModal = styled.button`
@@ -56,6 +61,7 @@ export const ButtonCloseModal = styled.button`
 
   border: 0 solid transparent;
   border-radius: 50%;
+
   transition: filter 0.2s;
 
   &:hover {
@@ -63,30 +69,9 @@ export const ButtonCloseModal = styled.button`
   }
 `;
 
-export const WraperTop = styled.div`
-  width: 100%;
-  height: 256px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  border-radius: 0px;
-  background: linear-gradient(
-    90deg,
-    var(--primary-Gradient-500) 0%,
-    var(--primary-Gradient-300) 100%
-  );
-`;
-
 export const WraperBottom = styled.div`
   width: 100%;
-  height: 406px;
+  //height: 556px;
 
   display: flex;
   flex: 1;
@@ -94,9 +79,10 @@ export const WraperBottom = styled.div`
   align-items: center;
   justify-content: flex-start;
 
-  position: absolute;
-  top: 153px;
-  left: 0;
+  position: relative;
+  /*top: 100px;
+  left: 0; */
+  margin-top: 400px;
 
   border-radius: 24px 24px 0px 0px;
   background: var(--neutral-200);
@@ -106,9 +92,8 @@ export const ImagemAvatar = styled.div`
   width: 247px;
   height: 247px;
 
-  position: absolute;
-  top: -115px;
-  left: 60px;
+  position: relative;
+  top: -50px;
 
   background-image: url(${({ src }) => src});
   background-position: center;
@@ -124,8 +109,7 @@ export const Name = styled.div`
   height: 50px;
 
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 
   margin: 160px 0 36px 0;
@@ -141,8 +125,18 @@ export const Name = styled.div`
 
     color: var(--neutral-700);
   }
-`;
 
+  button {
+    border: 0;
+    background: transparent;
+    padding-left: 28px;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+`;
 
 export const WrapperInfo = styled.div`
   width: 311px;
@@ -163,8 +157,8 @@ export const Separator = styled.span`
 export const PokebolaIcon = styled.button`
   width: 80px;
   height: 80px;
-  position: absolute;
-  bottom: 40px;
+  position: fixed;
+  bottom: 195px;
   border-radius: 50%;
   border: 0;
 
@@ -183,8 +177,8 @@ export const PokebolaIcon = styled.button`
 export const ButtonRemovePokemon = styled.button`
   width: 221px;
   height: 56px;
-  position: absolute;
-  bottom: 52px;
+  position: fixed;
+  bottom: 10%;
 
   border-radius: 42px;
   border: 0;

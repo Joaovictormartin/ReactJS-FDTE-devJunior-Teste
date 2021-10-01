@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 
-import { TextInputEditModal } from '../TextInputEditModal';
+import editIconImg from "../../assets/img/editIcon.png";
 
 import { types } from "../../utils/Translation";
-
+import { TextInputEditModal } from "../TextInputEditModal";
 import { ConteinerInfoPokemon } from "../ConteinerInfoPokemon";
 
 import {
@@ -12,7 +12,6 @@ import {
   pokemonModalContent,
   Container,
   ButtonCloseModal,
-  WraperTop,
   WraperBottom,
   ImagemAvatar,
   Name,
@@ -33,6 +32,7 @@ export function ModalPokemon({
   isEdit = false,
 }) {
   const [input, setInput] = useState("");
+  const [isInput, setIsInput] = useState(false);
 
   function handleAddPokemon(data) {
     setPokebolas((oldStatus) => [...oldStatus, data]);
@@ -47,6 +47,22 @@ export function ModalPokemon({
     setInput("");
   }
 
+  function handleUpdatePokemon(id) {
+    if (!input) return;
+
+    const updatePokemon = arryPokemon.map((item) =>
+      item.id === id ? { ...item, name: input } : item
+    );
+    setPokebolas(updatePokemon);
+    setInput("");
+    setIsInput(false);
+  }
+
+  function handleCloseInput() {
+    setIsInput(false);
+    setInput("");
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -58,14 +74,29 @@ export function ModalPokemon({
       }}
     >
       <Container>
-        <WraperTop>
-          <ButtonCloseModal onClick={onRequestClose} />
-        </WraperTop>
+        <ButtonCloseModal onClick={onRequestClose} />
 
         <WraperBottom>
           <ImagemAvatar src={data?.sprites?.front_default} />
           {isEdit ? (
-            <TextInputEditModal value={input} onChange={setInput} isVisible/>
+            <>
+              {isInput ? (
+                <TextInputEditModal
+                  value={input}
+                  onChange={setInput}
+                  isVisible
+                  onCheck={() => handleUpdatePokemon(data.id)}
+                  onClose={handleCloseInput}
+                />
+              ) : (
+                <Name>
+                  <h1>{data?.name}</h1>
+                  <button onClick={() => setIsInput(true)}>
+                    {<img src={editIconImg} alt="edit" />}
+                  </button>
+                </Name>
+              )}
+            </>
           ) : (
             <Name>
               <h1>{data?.name}</h1>
@@ -91,14 +122,6 @@ export function ModalPokemon({
 
           <Separator width="311" height="1" isMargin />
 
-          {isEdit ? (
-            <ButtonRemovePokemon onClick={() => handleRemovePokemon(data.id)}>
-              Liberar pokemon
-            </ButtonRemovePokemon>
-          ) : (
-            <PokebolaIcon onClick={() => handleAddPokemon(data)} />
-          )}
-
           <WrapperTypes>
             {data?.types.map((item) => (
               <Types key={item?.slot} back={item?.slot}>
@@ -106,6 +129,14 @@ export function ModalPokemon({
               </Types>
             ))}
           </WrapperTypes>
+
+          {isEdit ? (
+            <ButtonRemovePokemon onClick={() => handleRemovePokemon(data.id)}>
+              Liberar pokemon
+            </ButtonRemovePokemon>
+          ) : (
+            <PokebolaIcon onClick={() => handleAddPokemon(data)} />
+          )}
         </WraperBottom>
       </Container>
     </Modal>
