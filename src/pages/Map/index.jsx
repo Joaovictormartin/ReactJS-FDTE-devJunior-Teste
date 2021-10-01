@@ -33,6 +33,9 @@ export default function Map() {
   }, []);
 
   async function handleSubmit() {
+    
+    if(pokebolas.length === 6) return;
+    
     try {
       setMoving(!moving);
 

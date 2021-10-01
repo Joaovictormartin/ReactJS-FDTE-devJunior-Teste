@@ -65,6 +65,7 @@ export const Container = styled.div`
     background-size: cover;
     background-position: center;
   }
+  
 `;
 
 export const Character = styled.div`
