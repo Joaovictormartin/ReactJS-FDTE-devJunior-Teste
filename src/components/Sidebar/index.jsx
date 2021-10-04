@@ -1,31 +1,34 @@
 import React, { useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-import PokemonRedux from "../../redux/ducks/pokemon";
 import plusImg from "../../assets/img/plus.png";
 
 import { ModalPokemon } from "../ModalPokemon";
+import { ModalNewPokemon } from "../ModalNewPokemon";
 import { Button } from "../Button";
 import { Container, Item } from "./styles";
 
 export function SideBar({ data, setPokebolas }) {
-  const dispatch = useDispatch();
-  const { data: pokemonSelect } = useSelector(({ pokemon }) => pokemon);
- 
-  const [openModal, setOpenModal] = useState(false);
+
+  const [ pokemonSelect, setPokemonSelect ] = useState([])
+  const [ openModal, setOpenModal ] = useState(false);
+  const [ openNewModal, setNewOpenModal ] = useState(false);
 
   async function handleSubmit(id) {
     try {
-      if (id !== null) {
-        await dispatch(PokemonRedux.captureRequest(id));
+      const [PokemonSelecionado] = data.filter((item) => item.id === id);
+      const indexPokemon = data.indexOf(PokemonSelecionado);
 
-        setOpenModal(true);
-      }
+      await setPokemonSelect(data[indexPokemon])
+      setOpenModal(true);
     } catch (e) {}
   }
 
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
+  }, []);
+
+  const handleCloseNewModal = useCallback(() => {
+    setNewOpenModal(false);
   }, []);
 
   return (
@@ -43,7 +46,7 @@ export function SideBar({ data, setPokebolas }) {
 
       {data.length < 6 && (
         <Button
-          onClick={() => console.log("botão create")}
+          onClick={() => setNewOpenModal(true)}
           icon={<img src={plusImg} alt="add" />}
         />
       )}
@@ -56,6 +59,13 @@ export function SideBar({ data, setPokebolas }) {
         arryPokemon={data}
         isEdit
       />
+
+      <ModalNewPokemon
+        isOpen={openNewModal}
+        onRequestClose={handleCloseNewModal}
+
+      />
+
     </Container>
   );
 }
