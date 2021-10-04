@@ -70,7 +70,7 @@ export const ButtonCloseModal = styled.button`
 
 export const WraperBottom = styled.div`
   @media(max-width: 720px) {
-    margin-top: 21rem;
+    margin-top: 15rem;
   }
   width: 100%;
 
@@ -190,7 +190,7 @@ export const PokebolaIcon = styled.button`
   width: 80px;
   height: 80px;
   position: fixed;
-  bottom: 15vh;
+  bottom: 70px;
   border-radius: 50%;
   border: 0;
 
@@ -210,7 +210,7 @@ export const ButtonRemovePokemon = styled.button`
   width: 221px;
   height: 56px;
   position: fixed;
-  bottom: 17.5vh;
+  bottom: 75px;
 
   border-radius: 42px;
   border: 0;
@@ -275,7 +275,7 @@ export const Skills = styled.div`
   justify-content: center;
   align-items: center;
 
-  margin-bottom: 70px;
+  margin-bottom:  ${({isEdit}) => isEdit ? 0 : 70}px;
   position: relative;
   top: -80px;
 

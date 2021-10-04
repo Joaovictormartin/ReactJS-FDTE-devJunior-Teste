@@ -172,7 +172,7 @@ export function ModalPokemon({
           </SeparatorName>
 
           {data?.abilities !== undefined && (
-            <Skills>
+            <Skills isEdit={isEdit}>
               {`${data?.abilities[0]?.ability?.name}, ${data?.abilities[1]?.ability?.name}`}
             </Skills>
           )}
