@@ -113,7 +113,7 @@ export const SeparatorName = styled.div`
   align-items: center;
   justify-content: space-around;
 
-  margin: 30px 0;
+  margin: 0 0 30px 0;
   position: relative;
   top: -80px;
 
