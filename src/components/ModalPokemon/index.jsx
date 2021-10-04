@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
 import editIconImg from "../../assets/img/editIcon.png";
 
 import { types } from "../../utils/Translation";
-import { TextInputEditModal } from "../TextInputEditModal";
-import { ConteinerInfoPokemon } from "../ConteinerInfoPokemon";
+import { StatisticsModal } from "./components/StatisticsModal";
+import { TextInputEditModal } from "./components/TextInputEditModal";
+import { ConteinerInfoPokemon } from "./components/ConteinerInfoPokemon";
 
 import {
   pokemonModalOverlay,
@@ -17,10 +18,12 @@ import {
   Name,
   WrapperInfo,
   Separator,
+  SeparatorName,
   PokebolaIcon,
   ButtonRemovePokemon,
   WrapperTypes,
   Types,
+  Skills,
 } from "./styles";
 
 export function ModalPokemon({
@@ -31,15 +34,21 @@ export function ModalPokemon({
   arryPokemon = [],
   isEdit = false,
 }) {
+  const [namePokemon, setNamePokemon] = useState("");
   const [input, setInput] = useState("");
   const [isInput, setIsInput] = useState(false);
 
+  useEffect(() => {
+    setNamePokemon(data?.name);
+  }, [data, input]);
+
+  //add o pokemon no array
   function handleAddPokemon(data) {
     setPokebolas((oldStatus) => [...oldStatus, data]);
     onRequestClose();
-    setInput("");
   }
 
+  //remove o pokemon do array
   function handleRemovePokemon(id) {
     const filterPokemon = arryPokemon.filter((item) => item.id !== id);
     setPokebolas(filterPokemon);
@@ -47,17 +56,30 @@ export function ModalPokemon({
     setInput("");
   }
 
+  //atualizar o name do pokemon
   function handleUpdatePokemon(id) {
     if (!input) return;
 
-    const updatePokemon = arryPokemon.map((item) =>
-      item.id === id ? { ...item, name: input } : item
-    );
-    setPokebolas(updatePokemon);
+    const [updatePokemon] = arryPokemon.filter((item) => item.id === id);
+
+    var indexPokemon = arryPokemon.indexOf(updatePokemon);
+    updatePokemon.name = input;
+
+    arryPokemon.splice(indexPokemon, 1, updatePokemon);
+
     setInput("");
     setIsInput(false);
+    setNamePokemon(arryPokemon[indexPokemon].name);
+    setPokebolas(arryPokemon);
   }
 
+  //habilita do input do name
+  function handleOpenInput() {
+    setIsInput(true);
+    setInput(namePokemon);
+  }
+
+  //oculta do input do name
   function handleCloseInput() {
     setIsInput(false);
     setInput("");
@@ -66,7 +88,7 @@ export function ModalPokemon({
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={() => onRequestClose()}
       ariaHideApp={false}
       style={{
         content: pokemonModalContent,
@@ -74,7 +96,13 @@ export function ModalPokemon({
       }}
     >
       <Container>
-        <ButtonCloseModal onClick={onRequestClose} />
+        <ButtonCloseModal
+          onClick={() => {
+            onRequestClose();
+            setIsInput(false);
+            setInput("");
+          }}
+        />
 
         <WraperBottom>
           <ImagemAvatar src={data?.sprites?.front_default} />
@@ -90,8 +118,8 @@ export function ModalPokemon({
                 />
               ) : (
                 <Name>
-                  <h1>{data?.name}</h1>
-                  <button onClick={() => setIsInput(true)}>
+                  <h1>{namePokemon}</h1>
+                  <button onClick={() => handleOpenInput()}>
                     {<img src={editIconImg} alt="edit" />}
                   </button>
                 </Name>
@@ -99,36 +127,75 @@ export function ModalPokemon({
             </>
           ) : (
             <Name>
-              <h1>{data?.name}</h1>
+              <h1>{namePokemon}</h1>
             </Name>
           )}
 
           <WrapperInfo>
-            <ConteinerInfoPokemon
-              title="hp"
-              content={`${data?.stats[0]?.base_stat}/${data?.stats[0]?.base_stat}`}
-            />
+            {data?.stats?.length !== undefined && (
+              <ConteinerInfoPokemon
+                title="hp"
+                value={`${data?.stats[0]?.base_stat}/${data?.stats[0]?.base_stat}`}
+              />
+            )}
             <Separator width="1" height="48" />
             <ConteinerInfoPokemon
               title="altura"
-              content={`${data?.height * 10} m`}
+              value={`${data?.height * 10} m`}
             />
             <Separator width="1" height="48" />
             <ConteinerInfoPokemon
               title="peso"
-              content={`${data?.weight / 10} kg`}
+              value={`${data?.weight / 10} kg`}
             />
           </WrapperInfo>
 
-          <Separator width="311" height="1" isMargin />
+          <SeparatorName>
+            <span />
+            <h2>Tipo</h2>
+            <span />
+          </SeparatorName>
 
           <WrapperTypes>
-            {data?.types.map((item) => (
-              <Types key={item?.slot} back={item?.slot}>
-                {types(item?.type?.name)}
-              </Types>
-            ))}
+            {data?.types !== undefined &&
+              data?.types.map((item) => (
+                <Types key={item?.slot} back={item?.slot}>
+                  {types(item?.type?.name)}
+                </Types>
+              ))}
           </WrapperTypes>
+
+          <SeparatorName>
+            <span />
+            <h2>Habilidade</h2>
+            <span />
+          </SeparatorName>
+
+          {data?.abilities !== undefined && (
+            <Skills>
+              {`${data?.abilities[0]?.ability?.name}, ${data?.abilities[1]?.ability?.name}`}
+            </Skills>
+          )}
+
+          {isEdit && (
+            <>
+              <SeparatorName>
+                <span />
+                <h2>Estatísticas</h2>
+                <span />
+              </SeparatorName>
+
+              {data?.stats !== undefined && (
+                <StatisticsModal
+                  attack={data?.stats[1]?.base_stat}
+                  defense={data?.stats[2]?.base_stat}
+                  specialAttack={data?.stats[3]?.base_stat}
+                  specialDefense={data?.stats[4]?.base_stat}
+                  velocity={data?.stats[5]?.base_stat}
+                />
+              )}
+            </>
+          )}
 
           {isEdit ? (
             <ButtonRemovePokemon onClick={() => handleRemovePokemon(data.id)}>

@@ -24,7 +24,7 @@ export const pokemonModalContent = {
   padding: "0 !important",
   top: 0,
   width: 370,
-  height: 560,
+  height: 560, //"85vh",
   left: 0,
 
   border: "none",
@@ -36,8 +36,7 @@ export const Container = styled.div`
   height: 100%;
 
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   box-sizing: border-box;
 
   background: linear-gradient(
@@ -70,19 +69,17 @@ export const ButtonCloseModal = styled.button`
 `;
 
 export const WraperBottom = styled.div`
+  @media(max-width: 720px) {
+    margin-top: 21rem;
+  }
   width: 100%;
-  //height: 556px;
 
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 
-  position: relative;
-  /*top: 100px;
-  left: 0; */
-  margin-top: 400px;
+  margin-top: 14rem;
 
   border-radius: 24px 24px 0px 0px;
   background: var(--neutral-200);
@@ -93,7 +90,7 @@ export const ImagemAvatar = styled.div`
   height: 247px;
 
   position: relative;
-  top: -50px;
+  top: -120px;
 
   background-image: url(${({ src }) => src});
   background-position: center;
@@ -108,11 +105,14 @@ export const Name = styled.div`
   width: 100%;
   height: 50px;
 
+  position: relative;
+  top: -100px;
+
   display: flex;
   justify-content: center;
   align-items: center;
 
-  margin: 160px 0 36px 0;
+  margin: 0px 0 0px 0;
 
   h1 {
     font-size: 18px;
@@ -147,6 +147,9 @@ export const WrapperInfo = styled.div`
 `;
 
 export const Separator = styled.span`
+  position: relative;
+  top: -80px;
+
   width: ${({ width }) => width && width}px;
   height: ${({ height }) => height && height}px;
   margin: ${({ isMargin }) => isMargin && "40px 0"};
@@ -154,11 +157,40 @@ export const Separator = styled.span`
   background: var(--neutral-500);
 `;
 
+export const SeparatorName = styled.div`
+  width: 90%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+
+  margin: 30px 0;
+  position: relative;
+  top: -80px;
+
+  span {
+    width: 110px;
+    height: 1px;
+    background: var(--neutral-500);
+  }
+
+  h2 {
+    font-weight: 600;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 24px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--neutral-700);
+  }
+`;
+
 export const PokebolaIcon = styled.button`
   width: 80px;
   height: 80px;
   position: fixed;
-  bottom: 195px;
+  bottom: 15vh;
   border-radius: 50%;
   border: 0;
 
@@ -178,7 +210,7 @@ export const ButtonRemovePokemon = styled.button`
   width: 221px;
   height: 56px;
   position: fixed;
-  bottom: 10%;
+  bottom: 17.5vh;
 
   border-radius: 42px;
   border: 0;
@@ -204,6 +236,9 @@ export const WrapperTypes = styled.div`
   align-items: center;
   justify-content: center;
 
+  position: relative;
+  top: -83px;
+
   margin-bottom: 20px;
 `;
 
@@ -226,7 +261,29 @@ export const Types = styled.div`
   background: ${({ back }) =>
     back === 1 ? "var(--types-Grass)" : "var(--types-Poison)"};
 
-  color: #ffffff;
+  color: var(--neutral);
 
   margin: 0 6px;
+`;
+
+export const Skills = styled.div`
+  width: 100%;
+  height: 32px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 70px;
+  position: relative;
+  top: -80px;
+
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  color:var(--neutral-700);
+
 `;
