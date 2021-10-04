@@ -8,25 +8,34 @@ import { Button } from "../Button";
 import { Container, Item } from "./styles";
 
 export function SideBar({ data, setPokebolas }) {
+  const [pokemonSelect, setPokemonSelect] = useState([]);
+  const [pokemonSelectCustomized, setPokemonSelectCustomized] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [openNewModal, setNewOpenModal] = useState(false);
 
-  const [ pokemonSelect, setPokemonSelect ] = useState([])
-  const [ openModal, setOpenModal ] = useState(false);
-  const [ openNewModal, setNewOpenModal ] = useState(false);
-
-  async function handleSubmit(id) {
+  function handleSubmit(id) {
     try {
       const [PokemonSelecionado] = data.filter((item) => item.id === id);
       const indexPokemon = data.indexOf(PokemonSelecionado);
 
-      await setPokemonSelect(data[indexPokemon])
-      setOpenModal(true);
+      if(id >= 1000) {
+        setPokemonSelectCustomized(data[indexPokemon]);
+        setNewOpenModal(true);
+      } else {
+        setPokemonSelect(data[indexPokemon]);
+        setOpenModal(true);
+      }
+
+
     } catch (e) {}
   }
 
+  //fechar modal de exibição dos pokemons
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
   }, []);
 
+  //fechar modal de criar os pokemons
   const handleCloseNewModal = useCallback(() => {
     setNewOpenModal(false);
   }, []);
@@ -63,9 +72,10 @@ export function SideBar({ data, setPokebolas }) {
       <ModalNewPokemon
         isOpen={openNewModal}
         onRequestClose={handleCloseNewModal}
-
+        setPokebolas={setPokebolas}
+        arryPokemon={data}
+        dataSelect={pokemonSelectCustomized}
       />
-
     </Container>
   );
 }
