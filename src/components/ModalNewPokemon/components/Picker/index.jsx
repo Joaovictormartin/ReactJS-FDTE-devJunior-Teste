@@ -4,18 +4,18 @@ import chevron from "../../../../assets/img/chevronDownBlack.png";
 
 import { Container, Select, Error } from "./styles";
 
-export function Picker({ options, error = "" }) {
+export function Picker({ options, onChange, error = "" }) {
   return (
     <Container>
       <img src={chevron} className="dropdown__icon" alt="Seta para Baixo" />
 
-      <Select error={!!error} multiple >
+      <Select error={!!error} >
         <option value="">Selecione o(s) tipo(s)</option>
 
         {options &&
-          options.map((option, index) => (
-            <option key={index} value={option.value}>
-              {option.text}
+          options.map((option) => (
+            <option key={option.id} value={option.value}>
+              {option.value}
             </option>
           ))}
       </Select>
