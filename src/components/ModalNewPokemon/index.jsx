@@ -12,7 +12,7 @@ import getValidationErrors from "../../utils/getValidationErrors";
 import { Input } from "./components/Input";
 import { Picker } from "./components/Picker";
 import { InputNumber } from "./components/InputNumber";
-import { types } from "../../utils/Translation";
+import { dataPicker } from "../../utils/DataPickerNewModal";
 
 import {
   pokemonModalOverlay,
@@ -26,68 +26,127 @@ import {
 } from "./styles";
 
 export function ModalNewPokemon({
-  data,
+  dataSelect = [],
   isOpen,
   setPokebolas,
   onRequestClose,
   arryPokemon = [],
   isEdit = false,
 }) {
-  const schema = Yup.object().shape({
-    name: Yup.string()
-      .required("O campo nome é obrigatório.")
-      .max(255, "O campo nome está inválido."),
-    hp: Yup.string()
-      .required("O campo HP é obrigatório.")
-      .max(255, "O campo HP está inválido."),
-    weight: Yup.string()
-      .required("O campo peso é obrigatório.")
-      .max(255, "O campo peso está inválido."),
-    height: Yup.string()
-      .required("O campo altura é obrigatório.")
-      .max(255, "O campo altura está inválido."),
+  //variavel iniciais do formik
+  const initialDataFormik = {
+    name: "",
+    hp: "",
+    weight: "",
+    height: "",
+    img_url: "",
+    types: { type01: "", type02: "" },
+    abiliity01: "",
+    abiliity02: "",
+    abiliity03: "",
+    abiliity04: "",
+    defense: "",
+    attack: "",
+    specialDefense: "",
+    specialAttack: "",
+    velocity: "",
+  };
 
-    type: Yup.string().required("O campo tipo é obrigatório."),
+  console.log(dataSelect);
 
-    abiliity01: Yup.string()
-      .required("O campo habilidade 1 é obrigatório.")
-      .max(255, "O campo habilidade 1 está inválido."),
-    abiliity02: Yup.string()
-      .required("O campo habilidade 2 é obrigatório.")
-      .max(255, "O campo habilidade 2 está inválido."),
-    abiliity03: Yup.string()
-      .required("O campo habilidade 3 é obrigatório.")
-      .max(255, "O campo habilidade 3 está inválido."),
-    abiliity04: Yup.string()
-      .required("O campo habilidade 4 é obrigatório.")
-      .max(255, "O campo habilidade 4 está inválido."),
-
-    defense: Yup.string()
-      .required("O campo defesa é obrigatório.")
-      .max(255, "O campo defesa está inválido."),
-    attack: Yup.string()
-      .required("O campo ataque é obrigatório.")
-      .max(255, "O campo ataque está inválido."),
-    specialDefense: Yup.string()
-      .required("O campo defesa especial é obrigatório.")
-      .max(255, "O campo defesa especial está inválido."),
-    specialAttack: Yup.string()
-      .required("O campo ataque especial é obrigatório.")
-      .max(255, "O campo ataque especial está inválido."),
-    velocity: Yup.string()
-      .required("O campo velocidade é obrigatório.")
-      .max(255, "O campo velocidade está inválido."),
-  });
+  //gerar id aleatório para o novo pokemon
+  function idRandom(min = 1000, max = 2000) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   const handleSubmitPokemon = useCallback(
-    async (data, { resetForm, setSubmitting, setErrors }) => {
+    async (data = dataSelect, { resetForm, setSubmitting, setErrors }) => {
       try {
+        const schema = Yup.object().shape({
+          name: Yup.string()
+            .required("O campo nome é obrigatório.")
+            .max(255, "O campo nome está inválido."),
+          hp: Yup.string()
+            .required("O campo HP é obrigatório.")
+            .max(255, "O campo HP está inválido."),
+          weight: Yup.string()
+            .required("O campo peso é obrigatório.")
+            .max(255, "O campo peso está inválido."),
+          height: Yup.string()
+            .required("O campo altura é obrigatório.")
+            .max(255, "O campo altura está inválido."),
+
+          // types: Yup.object().shape({
+          //   type01: Yup.string()
+          //     .required("O campo necessita de 2 tipos."),
+          //   type02: Yup.string(),
+          // }),
+
+          abiliity01: Yup.string()
+            .required("O campo habilidade 1 é obrigatório.")
+            .max(255, "O campo habilidade 1 está inválido."),
+          abiliity02: Yup.string()
+            .required("O campo habilidade 2 é obrigatório.")
+            .max(255, "O campo habilidade 2 está inválido."),
+          abiliity03: Yup.string()
+            .required("O campo habilidade 3 é obrigatório.")
+            .max(255, "O campo habilidade 3 está inválido."),
+          abiliity04: Yup.string()
+            .required("O campo habilidade 4 é obrigatório.")
+            .max(255, "O campo habilidade 4 está inválido."),
+
+          defense: Yup.string()
+            .required("O campo defesa é obrigatório.")
+            .max(255, "O campo defesa está inválido."),
+          attack: Yup.string()
+            .required("O campo ataque é obrigatório.")
+            .max(255, "O campo ataque está inválido."),
+          specialDefense: Yup.string()
+            .required("O campo defesa especial é obrigatório.")
+            .max(255, "O campo defesa especial está inválido."),
+          specialAttack: Yup.string()
+            .required("O campo ataque especial é obrigatório.")
+            .max(255, "O campo ataque especial está inválido."),
+          velocity: Yup.string()
+            .required("O campo velocidade é obrigatório.")
+            .max(255, "O campo velocidade está inválido."),
+        });
+
         await schema.validate(data, {
           abortEarly: false,
         });
 
+        const arrayNewPokemon = {
+          id: idRandom(),
+          name: data.name,
+          weight: data.weight,
+          height: data.height,
+          img_url: data.img_url,
+          stats: [
+            { name: "hp", base_stat: data.hp },
+            { name: "attack", base_stat: data.attack },
+            { name: "defense", base_stat: data.defense },
+            { name: "specialAttack", base_stat: data.specialAttack },
+            { name: "specialDefense", base_stat: data.specialDefense },
+            { name: "velocity", base_stat: data.velocity },
+          ],
+          abilities: [
+            { hability: data.abiliity01 },
+            { hability: data.abiliity02 },
+            { hability: data.abiliity03 },
+            { hability: data.abiliity04 },
+          ],
+          types: [{ slot: 1, name: "" /*data.type*/ }],
+        };
+
+        //add o pokemon no array
+        setPokebolas((oldStatus) => [...oldStatus, arrayNewPokemon]);
+
         resetForm({});
         setSubmitting(true);
+        onRequestClose();
       } catch (e) {
         if (e instanceof Yup.ValidationError) {
           const errors = getValidationErrors(e);
@@ -117,26 +176,10 @@ export function ModalNewPokemon({
           </ImagemAvatar>
 
           <Formik
-            initialValues={{
-              name: "",
-              hp: "",
-              weight: "",
-              height: "",
-              type: "",
-              abiliity01: "",
-              abiliity02: "",
-              abiliity03: "",
-              abiliity04: "",
-              defense: "",
-              attack: "",
-              specialDefense: "",
-              specialAttack: "",
-              velocity: "",
-            }}
+            initialValues={initialDataFormik}
             onSubmit={handleSubmitPokemon}
-            validationSchema={schema}
           >
-            {({ values, errors, handleChange, handleSubmit }) => (
+            {({ values , errors, handleChange, handleSubmit }) => (
               <>
                 <Input
                   label="Nome"
@@ -153,7 +196,7 @@ export function ModalNewPokemon({
                   error={errors.hp}
                   unity="kg"
                   onChange={handleChange("hp")}
-                  onChangeInc={(values) => console.log('asd')}
+                  onChangeInc={(values) => console.log("asd")}
                 />
 
                 <InputNumber
@@ -180,11 +223,7 @@ export function ModalNewPokemon({
                   <span />
                 </SeparatorName>
 
-                <Picker
-                  error={errors.type}
-                  value={values.type}
-                  on={values.type}
-                />
+                <Picker options={dataPicker} />
 
                 <SeparatorName>
                   <span />
@@ -271,7 +310,7 @@ export function ModalNewPokemon({
                   onChange={handleChange("velocity")}
                 />
 
-                <ButtonCreatePokemon onClick={handleSubmit}>
+                <ButtonCreatePokemon type="submit" onClick={handleSubmit}>
                   Criar pokemon
                 </ButtonCreatePokemon>
               </>
