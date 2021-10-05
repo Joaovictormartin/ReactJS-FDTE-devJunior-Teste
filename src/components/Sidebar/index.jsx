@@ -10,6 +10,7 @@ import { Container, Item } from "./styles";
 export function SideBar({ data, setPokebolas }) {
   const [pokemonSelect, setPokemonSelect] = useState([]);
   const [pokemonSelectCustomized, setPokemonSelectCustomized] = useState([]);
+  const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openNewModal, setNewOpenModal] = useState(false);
 
@@ -20,19 +21,25 @@ export function SideBar({ data, setPokebolas }) {
 
       if(id >= 1000) {
         setPokemonSelectCustomized(data[indexPokemon]);
+        setOpenModalEdit(true);
         setNewOpenModal(true);
       } else {
         setPokemonSelect(data[indexPokemon]);
+        setOpenModalEdit(false);
         setOpenModal(true);
       }
-
-
     } catch (e) {}
   }
 
   //fechar modal de exibição dos pokemons
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
+  }, []);
+
+  //abrir modal de criar os pokemons
+  const handleOpenNewModal = useCallback(() => {
+    setOpenModalEdit(false);
+    setNewOpenModal(true);
   }, []);
 
   //fechar modal de criar os pokemons
@@ -55,7 +62,7 @@ export function SideBar({ data, setPokebolas }) {
 
       {data.length < 6 && (
         <Button
-          onClick={() => setNewOpenModal(true)}
+          onClick={() => handleOpenNewModal()}
           icon={<img src={plusImg} alt="add" />}
         />
       )}
@@ -73,8 +80,9 @@ export function SideBar({ data, setPokebolas }) {
         isOpen={openNewModal}
         onRequestClose={handleCloseNewModal}
         setPokebolas={setPokebolas}
-        arryPokemon={data}
         dataSelect={pokemonSelectCustomized}
+        arryPokemon={data}
+        isEdit={openModalEdit}
       />
     </Container>
   );

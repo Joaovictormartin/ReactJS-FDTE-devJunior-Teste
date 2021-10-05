@@ -26,12 +26,12 @@ import {
 } from "./styles";
 
 export function ModalNewPokemon({
-  dataSelect = [],
   isOpen,
+  dataSelect = [],
   setPokebolas,
   onRequestClose,
   arryPokemon = [],
-  isEdit = false,
+  isEdit,
 }) {
   //variavel iniciais do formik
   const initialDataFormik = {
@@ -51,8 +51,6 @@ export function ModalNewPokemon({
     specialAttack: "",
     velocity: "",
   };
-
-  console.log(dataSelect);
 
   //gerar id aleatório para o novo pokemon
   function idRandom(min = 1000, max = 2000) {
@@ -157,6 +155,7 @@ export function ModalNewPokemon({
     }
   );
 
+  console.log(dataSelect);
   return (
     <Modal
       isOpen={isOpen}
@@ -172,14 +171,14 @@ export function ModalNewPokemon({
 
         <WraperBottom>
           <ImagemAvatar onClick={() => console.log("foto")}>
-            <img src={cameraButtonImg} />
+            <img src={cameraButtonImg}></img>
           </ImagemAvatar>
 
           <Formik
             initialValues={initialDataFormik}
-            onSubmit={handleSubmitPokemon}
+            onSubmit={ handleSubmitPokemon}
           >
-            {({ values , errors, handleChange, handleSubmit }) => (
+            {({ values, errors, handleChange, handleSubmit, isValid }) => (
               <>
                 <Input
                   label="Nome"
@@ -196,7 +195,6 @@ export function ModalNewPokemon({
                   error={errors.hp}
                   unity="kg"
                   onChange={handleChange("hp")}
-                  onChangeInc={(values) => console.log("asd")}
                 />
 
                 <InputNumber
@@ -310,7 +308,11 @@ export function ModalNewPokemon({
                   onChange={handleChange("velocity")}
                 />
 
-                <ButtonCreatePokemon type="submit" onClick={handleSubmit}>
+                <ButtonCreatePokemon
+                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={!isValid}
+                >
                   Criar pokemon
                 </ButtonCreatePokemon>
               </>
