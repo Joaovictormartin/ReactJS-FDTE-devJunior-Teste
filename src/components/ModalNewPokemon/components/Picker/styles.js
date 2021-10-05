@@ -6,6 +6,25 @@ export const Container = styled.div`
   position: relative;
   top: -100px;
   margin-bottom: 12px;
+
+  img {
+    width: 24px;
+    height: 24px;
+
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .basic-multi-select {
+    input { 
+      height: 48px;
+      border: 2px solid
+        ${({ error }) => (error ? "var(--action-Default)" : "var(--neutral-400)")};
+    }
+  }
 `;
 
 export const Select = styled.select`
